@@ -1,1 +1,5 @@
 *.swp
+
+zig-cache/
+zig-out/
+libs/
