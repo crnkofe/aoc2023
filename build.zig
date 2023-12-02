@@ -24,9 +24,30 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
 
+    const libutil = b.addStaticLibrary(.{
+        .name = "day1",
+        .root_source_file = .{ .path = "src/util.zig" },
+        .target = target,
+        .optimize = optimize,
+    });
+
+    const libday1 = b.addStaticLibrary(.{
+        .name = "day1",
+        .root_source_file = .{ .path = "src/day1.zig" },
+        .target = target,
+        .optimize = optimize,
+    });
+
+    libday1.addAnonymousModule("zig-clap", .{
+        .source_file = .{ .path = "libs/zig-clap/clap.zig" },
+    });
+
     exe.addAnonymousModule("zig-clap", .{
         .source_file = .{ .path = "libs/zig-clap/clap.zig" },
     });
+
+    exe.linkLibrary(libutil);
+    exe.linkLibrary(libday1);
 
     // exe.addModule("clap", table_helper);
 
