@@ -1,6 +1,7 @@
 *.swp
 *.swn
 *.swo
+.idea
 
 zig-cache/
 zig-out/
