@@ -1,0 +1,15 @@
+Found cycle: 0: from: 18156 to: 36313 - dur 18157 (ZZZ)
+Found cycle: 1: from: 14362 to: 28725 - dur 14363 (JJZ)
+Found cycle: 2: from: 16530 to: 33061 - dur 16531 (VHZ)
+Found cycle: 3: from: 12736 to: 25473 - dur 12737 (PQZ)
+Found cycle: 4: from: 19782 to: 39565 - dur 19783 (QCZ)
+Found cycle: 5: from: 19240 to: 38481 - dur 19241 (LRZ)
+
+a = b + x mod c
+a = d + x mod e
+
+Found cycle: 0: from: 18156 to: 36313 - dur 18157 (ZZZ)
+Found cycle: 1: from: 14362 to: 28725 - dur 14363 (JJZ)
+
+a = 18156 + x mod 18157
+a = 14362 + x mod 14363
