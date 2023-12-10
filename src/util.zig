@@ -2,6 +2,9 @@ const io = std.io;
 const std = @import("std");
 const clap = @import("zig-clap");
 
+var gpa_instance = std.heap.GeneralPurposeAllocator(.{}){};
+const gpa = &gpa_instance.allocator();
+
 pub fn compare(s1: []u8, s2: []const u8) bool {
     if (s1.len != s2.len) {
         return false;
@@ -22,4 +25,10 @@ pub fn isnum(c: u8) bool {
 
 pub fn getnum(c: u8) u8 {
     return c - 48;
+}
+
+pub fn copys(s: []const u8) anyerror![]const u8 {
+    const cp: []u8 = try gpa.alloc(u8, s.len);
+    std.mem.copyForwards(u8, cp, s);
+    return cp;
 }

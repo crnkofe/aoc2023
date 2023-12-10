@@ -10,6 +10,7 @@ const day6 = @import("day6.zig");
 const day7 = @import("day7.zig");
 const day8 = @import("day8.zig");
 const day9 = @import("day9.zig");
+const day10 = @import("day10.zig");
 
 pub fn main() anyerror!void {
     // First we specify what parameters our program can take.
@@ -37,11 +38,11 @@ pub fn main() anyerror!void {
 
     if (res.args.day == 1) {
         return day1.day1(res.args.input orelse "", res.args.v2 > 0);
-    } else if (res.args.day == 2) { 
+    } else if (res.args.day == 2) {
         return day2.day2(res.args.input orelse "", res.args.v2 > 0);
-    } else if (res.args.day == 3) { 
+    } else if (res.args.day == 3) {
         return day3.day3(res.args.input orelse "", res.args.v2 > 0);
-    } else if (res.args.day == 4) { 
+    } else if (res.args.day == 4) {
         return day4.day4(res.args.input orelse "", res.args.v2 > 0);
     } else if (res.args.day == 5) {
         return day5.day5(res.args.input orelse "", res.args.v2 > 0);
@@ -52,7 +53,9 @@ pub fn main() anyerror!void {
     } else if (res.args.day == 8) {
         return day8.day8(res.args.input orelse "", res.args.v2 > 0);
     } else if (res.args.day == 9) {
-            return day9.day9(res.args.input orelse "", res.args.v2 > 0);
+        return day9.day9(res.args.input orelse "", res.args.v2 > 0);
+    } else if (res.args.day == 10) {
+        return day10.day10(res.args.input orelse "", res.args.v2 > 0);
     } else {
         std.debug.print("Unknown day {d}\n", .{res.args.day orelse 0});
     }
