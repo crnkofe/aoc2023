@@ -7,17 +7,8 @@ const util = @import("util.zig");
 var gpa_instance = std.heap.GeneralPurposeAllocator(.{}){};
 const gpa = &gpa_instance.allocator();
 
-const Point = struct {
-    x: u8,
-    y: u8,
-
-    fn eq(self: Point, p2: Point) bool {
-        return self.x == p2.x and self.y == p2.y;
-    }
-};
-
 // returns tile at location or . if no tile at location
-fn getTile(p: Point, map: std.ArrayList([]const u8)) u8 {
+fn getTile(p: util.Point, map: std.ArrayList([]const u8)) u8 {
     if (p.y >= map.items.len) {
         return '.';
     }
@@ -36,38 +27,38 @@ fn getTile(p: Point, map: std.ArrayList([]const u8)) u8 {
 // F is a 90-degree bend connecting south and east.
 // . is ground; there is no pipe in this tile.
 // S is the starting position of the animal; there is a pipe on this tile, but your sketch doesn't show what shape the pipe has.
-pub fn findNeighbours(p: Point, map: std.ArrayList([]const u8)) anyerror!std.ArrayList(Point) {
-    var neighbours = std.ArrayList(Point).init(gpa.*);
+pub fn findNeighbours(p: util.Point, map: std.ArrayList([]const u8)) anyerror!std.ArrayList(util.Point) {
+    var neighbours = std.ArrayList(util.Point).init(gpa.*);
 
     const t = getTile(p, map);
     // north
     if (p.y > 0 and t == 'S' or t == '|' or t == 'J' or t == 'L') {
-        const tN = getTile(Point{ .x = p.x, .y = p.y - 1 }, map);
+        const tN = getTile(util.Point{ .x = p.x, .y = p.y - 1 }, map);
         if (tN == '7' or tN == '|' or tN == 'F') {
-            try neighbours.append(Point{ .x = p.x, .y = p.y - 1 });
+            try neighbours.append(util.Point{ .x = p.x, .y = p.y - 1 });
         }
     }
 
     // west
     if (p.x > 0 and t == 'S' or t == '-' or t == 'J' or t == '7') {
-        const tW = getTile(Point{ .x = p.x - 1, .y = p.y }, map);
+        const tW = getTile(util.Point{ .x = p.x - 1, .y = p.y }, map);
         if (tW == '-' or tW == 'L' or tW == 'F') {
-            try neighbours.append(Point{ .x = p.x - 1, .y = p.y });
+            try neighbours.append(util.Point{ .x = p.x - 1, .y = p.y });
         }
     }
 
     // east
     if (t == 'S' or t == '-' or t == 'F' or t == 'L') {
-        const tE = getTile(Point{ .x = p.x + 1, .y = p.y }, map);
+        const tE = getTile(util.Point{ .x = p.x + 1, .y = p.y }, map);
         if (tE == '-' or tE == '7' or tE == 'J') {
-            try neighbours.append(Point{ .x = p.x + 1, .y = p.y });
+            try neighbours.append(util.Point{ .x = p.x + 1, .y = p.y });
         }
     }
     // south
     if (t == 'S' or t == '|' or t == 'F' or t == '7') {
-        const tS = getTile(Point{ .x = p.x, .y = p.y + 1 }, map);
+        const tS = getTile(util.Point{ .x = p.x, .y = p.y + 1 }, map);
         if (tS == '|' or tS == 'L' or tS == 'J') {
-            try neighbours.append(Point{ .x = p.x, .y = p.y + 1 });
+            try neighbours.append(util.Point{ .x = p.x, .y = p.y + 1 });
         }
     }
 
@@ -81,7 +72,7 @@ pub fn day10(filename: []const u8, _: bool) anyerror!void {
     var buf_reader = std.io.bufferedReader(file.reader());
     var in_stream = buf_reader.reader();
 
-    var s: Point = Point{ .x = 0, .y = 0 };
+    var s: util.Point = util.Point{ .x = 0, .y = 0 };
     var map = std.ArrayList([]const u8).init(gpa.*);
 
     var lineIndex: u8 = 0;
@@ -90,7 +81,7 @@ pub fn day10(filename: []const u8, _: bool) anyerror!void {
         var cIndex: u8 = 0;
         for (line) |c| {
             if (c == 'S') {
-                s = Point{ .x = cIndex, .y = lineIndex };
+                s = util.Point{ .x = cIndex, .y = lineIndex };
             }
             cIndex += 1;
         }
@@ -98,14 +89,14 @@ pub fn day10(filename: []const u8, _: bool) anyerror!void {
         lineIndex += 1;
     }
 
-    var loop = std.AutoHashMap(Point, bool).init(gpa.*);
+    var loop = std.AutoHashMap(util.Point, bool).init(gpa.*);
 
     var steps: u64 = 0;
-    var lastNeigbours: std.ArrayList(Point) = std.ArrayList(Point).init(gpa.*);
+    var lastNeigbours: std.ArrayList(util.Point) = std.ArrayList(util.Point).init(gpa.*);
     try lastNeigbours.append(s);
     try lastNeigbours.append(s);
     try loop.put(s, true);
-    var neighbours: std.ArrayList(Point) = try findNeighbours(s, map);
+    var neighbours: std.ArrayList(util.Point) = try findNeighbours(s, map);
     // What is the S-tile? This part is relevant for part 2.
     var sTile: u8 = 0;
     if (neighbours.items[0].x == neighbours.items[1].x) {
@@ -131,9 +122,9 @@ pub fn day10(filename: []const u8, _: bool) anyerror!void {
     while (!neighbours.items[0].eq(neighbours.items[1])) {
         try loop.put(neighbours.items[0], true);
         try loop.put(neighbours.items[1], true);
-        var nextNeighbours: std.ArrayList(Point) = std.ArrayList(Point).init(gpa.*);
+        var nextNeighbours: std.ArrayList(util.Point) = std.ArrayList(util.Point).init(gpa.*);
         for (neighbours.items) |n| {
-            const nn: std.ArrayList(Point) = try findNeighbours(n, map);
+            const nn: std.ArrayList(util.Point) = try findNeighbours(n, map);
             if ((!nn.items[0].eq(s)) and
                 (!nn.items[0].eq(lastNeigbours.items[0])) and
                 (!nn.items[0].eq(lastNeigbours.items[1])) and
@@ -165,8 +156,8 @@ pub fn day10(filename: []const u8, _: bool) anyerror!void {
         var up: u8 = 0;
         var down: u8 = 0;
         while (ri < mapLen) {
-            if (loop.contains(Point{ .x = ri, .y = li })) {
-                var t: u8 = getTile(Point{ .x = ri, .y = li }, map);
+            if (loop.contains(util.Point{ .x = ri, .y = li })) {
+                var t: u8 = getTile(util.Point{ .x = ri, .y = li }, map);
                 if (t == 'S') {
                     t = sTile;
                 }

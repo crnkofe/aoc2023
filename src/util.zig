@@ -5,6 +5,24 @@ const clap = @import("zig-clap");
 var gpa_instance = std.heap.GeneralPurposeAllocator(.{}){};
 const gpa = &gpa_instance.allocator();
 
+pub const Point = struct {
+    x: u8,
+    y: u8,
+
+    pub fn eq(self: Point, p2: Point) bool {
+        return self.x == p2.x and self.y == p2.y;
+    }
+};
+
+pub const Point64 = struct {
+    x: u64,
+    y: u64,
+
+    pub fn eq(self: Point, p2: Point) bool {
+        return self.x == p2.x and self.y == p2.y;
+    }
+};
+
 pub fn compare(s1: []u8, s2: []const u8) bool {
     if (s1.len != s2.len) {
         return false;

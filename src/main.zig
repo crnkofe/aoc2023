@@ -11,6 +11,8 @@ const day7 = @import("day7.zig");
 const day8 = @import("day8.zig");
 const day9 = @import("day9.zig");
 const day10 = @import("day10.zig");
+const day11 = @import("day11.zig");
+const day12 = @import("day12.zig");
 
 pub fn main() anyerror!void {
     // First we specify what parameters our program can take.
@@ -56,6 +58,10 @@ pub fn main() anyerror!void {
         return day9.day9(res.args.input orelse "", res.args.v2 > 0);
     } else if (res.args.day == 10) {
         return day10.day10(res.args.input orelse "", res.args.v2 > 0);
+    } else if (res.args.day == 11) {
+        return day11.day11(res.args.input orelse "", res.args.v2 > 0);
+    } else if (res.args.day == 12) {
+        return day12.day12(res.args.input orelse "", res.args.v2 > 0);
     } else {
         std.debug.print("Unknown day {d}\n", .{res.args.day orelse 0});
     }
